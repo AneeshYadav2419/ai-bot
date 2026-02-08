@@ -1,7 +1,9 @@
 "use client"
 import React, { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from "motion/react"
-import { Inika } from 'next/font/google'
+import axios from 'axios'
+import { useRouter } from "next/navigation"
+
 
 
 const HomeClient = ({ email }: { email?: string }) => {
@@ -20,22 +22,34 @@ const HomeClient = ({ email }: { email?: string }) => {
         }
         document.addEventListener("mousedown", handler)
         return () => document.removeEventListener("mousedown", handler)
-    },[])
+    }, [])
+
+    const navigate = useRouter()
 
     const features = [
         {
-            title :"Plug & Play",
-            desc :"Add the Chatbox to your site with s single script tag. "
+            title: "Plug & Play",
+            desc: "Add the Chatbox to your site with s single script tag. "
         },
         {
-            title :"Admin Controlled",
-            desc :"Your Control exactly what the AI knows and answers. "
+            title: "Admin Controlled",
+            desc: "Your Control exactly what the AI knows and answers. "
         },
         {
-            title :"Always online",
-            desc :"Your customers get instant support 24/7 "
+            title: "Always online",
+            desc: "Your customers get instant support 24/7 "
         }
     ]
+
+    const  handleLogOut = async() => {
+        try {
+            const result = await axios.get("/api/auth/logout")
+                window.location.href = "/"
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return (
         <div className='min-h-screen bg-linear-to-br from-white to bg-zinc-50 text-zinc-900 overflow-x-hidden '>
             <motion.div
@@ -62,8 +76,12 @@ const HomeClient = ({ email }: { email?: string }) => {
                                     exit={{ opacity: 0, y: -6 }}
                                     className='absolute right-0 mt-3 w-44 bg-white rounded-xl
                             shadow-xl border border-zinc-200 overflow-hidden'>
-                                    <button className='w-full text-left px-4 py-3 text-sm hover:bg-zinc-100'>Dashboard</button>
-                                    <button className='block px-4 py-3 text-sm text-red-600 hover:bg-zinc-100'>Logout</button>
+                                    <button className='w-full text-left px-4 py-3 text-sm hover:bg-zinc-100'
+                                    onClick={() => navigate.push('/dashboard')}
+                                    >Dashboard</button>
+                                    <button className='block px-4 py-3 text-sm text-red-600 hover:bg-zinc-100'
+                                    onClick={handleLogOut}
+                                    >Logout</button>
                                 </motion.div>
                             )}
                         </AnimatePresence>
@@ -98,27 +116,29 @@ const HomeClient = ({ email }: { email?: string }) => {
                         </p>
                         <div className='mt-10 flex gap-4'>
 
-                            {email ?  <button className='px-7 py-3 rounded-xl
+                            {email ? <button className='px-7 py-3 rounded-xl
                             bg-black text-white font-medium hover:bg-zinc-800 transition
-                            disabled:opacity-60'>
+                            disabled:opacity-60'
+                             onClick={() => navigate.push('/dashboard')}
+                            >
                                 Go To Dashboard
                             </button> :
-                             <button className='px-7 py-3 rounded-xl
+                                <button className='px-7 py-3 rounded-xl
                             bg-black text-white font-medium hover:bg-zinc-800 transition
                             disabled:opacity-60'>
-                                Get Started
-                            </button>
+                                    Get Started
+                                </button>
                             }
-                           
+
                             <button className='px-7 py-3 rounded-xl border border-zinc-300 text-zinc-700 hover:bg-zinc-100 transition'>Learn More</button>
                         </div>
 
                     </motion.div>
 
                     <motion.div className='relative'
-                    initial = {{opacity: 0, scale: 0.95}}
-                    animate = {{opacity  : 1, scale: 1}}
-                    transition={{duration : 0.7, delay: 0.2}}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.7, delay: 0.2 }}
 
                     >
                         <div className='rounded-2xl bg-white shadow-2xl border border-zinc-200 p-6'>
@@ -132,9 +152,9 @@ const HomeClient = ({ email }: { email?: string }) => {
                                 </div>
                             </div>
                             <motion.div
-                            animate={{y: [0, -12, 0]}}
-                            transition={{repeat : Infinity, duration: 3}}
-                            className='absolute -bottom-6 -right-6
+                                animate={{ y: [0, -12, 0] }}
+                                transition={{ repeat: Infinity, duration: 3 }}
+                                className='absolute -bottom-6 -right-6
                             w-14 h-14 rounded-full bg-black text-white
                             flex items-center justify-center shadow-xl'
                             >
@@ -148,26 +168,46 @@ const HomeClient = ({ email }: { email?: string }) => {
                 </div>
 
             </section>
-            <section 
-            id='feature'
-            className='bg-zinc-50 py-28 px-6 border-t border-zinc-200'>
+            <section
+                id='feature'
+                className='bg-zinc-50 py-28 px-6 border-t border-zinc-200'>
                 <div className='max-w-5xl mx-auto'>
                     <motion.h2
-                    initial ={{opacity:0 ,y:20}}
-                    whileInView={{opacity: 1, y:0}}
-                    viewport={{once: false}}
-                    transition={{duration: 0.5}}
-                    className='text-3xl font-semibold text-center'
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: false }}
+                        transition={{ duration: 0.5 }}
+                        className='text-3xl font-semibold text-center'
                     >
                         Why Businesses Choose SupportAI
-                        
+
                     </motion.h2>
+                    <div className='mt-16 grid grid-cols-1 md:grid-cols-3 gap-10'>
+                        {features.map((f, index) => (
+                            <motion.div
+                                key={index}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{delay: index * 0.1}}
+                                viewport={{once: false}}
+                                className='bg-white rounded-2xl p-8 shadow-lg border border-zinc-200'
+                            >
+                                <h1 className='text-lg font-medium'>{f.title}</h1>
+                                <p className='mt-3 text-zinc-600 text-sm'>{f.desc}</p>
+
+                            </motion.div>
+                        ))}
+
+                    </div>
                     <div>
 
                     </div>
                 </div>
 
             </section>
+            <footer className='py-10 text-center text-sm text-zinc-500'>
+                &copy; {new Date().getFullYear()} SupportAI. All rights reserved
+            </footer>
 
         </div>
     )
