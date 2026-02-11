@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@google/genai": "^1.40.0",
     "@scalekit-sdk/node": "^2.1.9",
     "axios": "^1.13.4",
     "mongoose": "^9.2.0",
