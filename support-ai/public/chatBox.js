@@ -1,7 +1,7 @@
 (function(){
     const api_Url = "http://localhost:3000/api/chat"
     const scriptTag = document.currentScript;
-    const ownerId = scriptTag.getAttribute("data_+owner-id")
+    const ownerId = scriptTag.getAttribute("data-owner-id")
 
     if(!ownerId){
         console.log("owner id not found")
@@ -9,30 +9,31 @@
     }
 
     const button = document.createElement("div")
-    button.innerHTML=" 💬"
+    button.innerHTML="💬"
 
     Object.assign(button.style,{
         position:"fixed",
-        button:"24px",
+        bottom:"24px",
         right : "24px",
         height: "56px",
+        width: "56px",
         borderRadius : "50%",
         background: "#000",
         color: "#fff",
         display:"flex",
-        alighItems: "center",
+        alignItems: "center",
         justifyContent: "center",
         cursor: "pointer",
         fontSize : "22px",
         boxShadow: "0 15px 40px rgba(0,0,0,0.35)",
         zIndex:"999999",
     })
-    document.body,appendChild(button)
+    document.body.appendChild(button)
 
     const box = document.createElement("div")
     Object.assign(box.style, {
         position:"fixed",
-        button:"90px",
+        bottom:"90px",
         right : "24px",
         height: "420px",
         width: "320px",
@@ -47,7 +48,7 @@
 
     })
 
-    box.innerHTML=`<div style = "
+     box.innerHTML=`<div style = "
     background: #000;
     color : #fff;
     padding: 12px 14px;
@@ -57,7 +58,7 @@
     align-items:center;
       ">
       <span>Customer Support</span>
-        <span id="chat-close" style:"cursor:pointer; font-size:16px">x</span>
+        <span id="chat-close" style="cursor:pointer; font-size:16px">x</span>
       </div>
 
       <div id="chat-messages" style="
@@ -77,7 +78,7 @@
       padding: 8px;
       gap:6px;
       ">
-      <input id="chat-input type:"text" style="
+      <input id="chat-input" type = "text" style="
       flex:1;
       padding:8px 10px;
       border: 1px solid #d1d5db;
@@ -99,7 +100,7 @@
       </div>
 
       `
-    document.body.appendChild(box)
+     document.body.appendChild(box)
 
     button.onclick=()=>{
         box.style.display = box.style.display === "none" ? "flex" : "none"
@@ -119,9 +120,9 @@
         bubble.innerHTML = text
         Object.assign(bubble.style, {
             maxWidth : "78%",
-            padding: "8px 12 px",
+            padding: "8px 12px",
             borderRadius: "14px",
-            fontSize: "13PX",
+            fontSize: "13px",
             lineHeight : "1.4",
             marginBottom : "8px",
             alignSelf: from === "user" ? "flex-end" : "flex-start",
@@ -129,14 +130,14 @@
             color : from === "user" ? "#fff" : "#111",
 
             borderTopRightRadius: from === "user" ? "4px" : "14px",
-            borderTopLeftRadius : from === " user" ? "14px" : "4px",
+            borderTopLeftRadius : from === "user" ? "14px" : "4px",
         })
         messageArea.appendChild(bubble)
         messageArea.scrollTop = messageArea.scrollHeight
     }
 
     sendBtn.onclick =async  () => {
-        const text = input.ariaValueMax.trim()
+        const text = input.value.trim()
         if(!text){
             return
         }
@@ -162,9 +163,11 @@
         })
         const data = await response.json()
         messageArea.removeChild(typing)
-        addMessage(data || "Somethinf went wrong", "ai")
+        addMessage(data || "Something went wrong", "ai")
        } catch (error) {
-        
+        console.log(error)
+          messageArea.removeChild(typing)
+        addMessage( "Somethinf went wrong", "ai")
        }
     }
 })()
